@@ -4,10 +4,10 @@ if (!empty ($_GET))
 {
      $db =new mysqli("localhost","root","","marcadores");
 
-     
-     
+     if ($_GET["what"]=="all")
+     {
          $sql="select * from marcadores order by nombre";
-     
+     }
        
        $response=get_json($sql,$db);
        header("Content-type: text/json; charset=utf8");
