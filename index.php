@@ -32,14 +32,56 @@
     <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
     <script type="text/javascript">
      $(document).ready(function(){
+     function ver()
+     {
+        $.getJSON("ver.php",{what:"all"},
+	    function (data)
+	    {
+		 var regex=/^(ht|f)tps?:\/\/\w+([\.\-\w]+)?\.([a-z]{2,4}|travel)(:\d{2,5})?(\/.*)?$/i;
+	         var table="<table class='table' >";
+		     table+="<thead><tr><th>#</th><th>Nombre</th><th>URL</th><th>Comentario</th></tr></thead><tbody>";
+	         for (var c =0;c<data.length;c++)
+		 {
+		    var obj = data[c];
+		    table+="<tr id='"+data[c].id+"'>";
+		    for (var property in obj)
+		    {
+		         if(regex.test(obj[property]))
+			 {
+			    table+="<td><a href='"+obj[property]+"' >"+obj[property]+"</a></td>";
+			 }
+			 else
+			 {
+                             table+="<td><p>"+obj[property]+"</p></td>";
+			 }     
+		    }
+		    table+="</tr>"
+
+		    
+		 }
+		 table+="</tbody></table>";
+		 $("#output").html(table);
+	    }
+	); 
+	}
+        
+	 ver();
+	 $("#output p").dblclick(
+	   function()
+	   {
+	   alert("waaaa");
+	   }
+	
+	);
         $("#modalWindow").modal("hide");
         $("#guardar").click(
 	   function(){
-	      $.post("guardar.php",$("#bookmark").serialize(),function(r){
+	      $.post("guardar.php",$("#addBookmark").serialize(),function(r){
 	          $("#modalWindow .modal-body p").html(r);
 		  $("#modalWindow").modal('show');
-		  $("#bookmark input").val("");
-		  $("#bookmark textarea").val("");
+		  $("#addBookmark input").val("");
+		  $("#addBookmark textarea").val("");
+		  ver();
 	      });
 	   });
 	$(".dropdown-toggle").dropdown();   
@@ -104,7 +146,7 @@
 	       </div>
 	      
 	               <div class="span8">
-		             <div class="well showBookmark">
+		             <div class="showBookmark">
                                   <ul class="nav nav-pills">
                                        <li class="dropdown">
                                             <a class="btn  dropdown-toggle" data-toggle="dropdown" href="#">Opciones <b class="caret"></b></a>
@@ -118,7 +160,7 @@
                                        </li>
                                   </ul> 
                                  <div id="output">
-				 
+				   
 				 </div> 
 			     </div>
 		       </div>
